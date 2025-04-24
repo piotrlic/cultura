@@ -1,0 +1,36 @@
+Kompetencja:,Definicja:,Zaobserwowano?,Su/Ha/Ri,Notatki
+FLEXIBILITY AND RELATIONS,szybko wdraża się w nowe tematy,FALSE,,
+,otwarcie reaguje na zmiany w wymaganiach klienta,FALSE,,
+,otwarty na różne scenariusze,TRUE,,Paweł umiał dopaować się do zmieniających się wymagań i oczekiwań.
+,jest pokorny,TRUE,Ha,"""Chętnie usłyszę komentarz od Was... mających takie duże doświadczenie"""
+,ma partnerski stosunek do kolegów i klientów,TRUE,Ha,Bardzo przyjemnie się z nim pracowało zarówno nad team taskiem jak i z kodem.
+,szanuje różnorodność/jest tolerancyjny,FALSE,,
+,odważnie proponuje nieszablonowe rozwiązania,FALSE,,
+EFFICIENCY AND BUSINESS ORIENTATION,dostarcza na czas,FALSE,,
+,umiejętnie określa priorytety,FALSE,,
+,"robi ""good enough"" dla danego kontekstu",FALSE,,
+,"skupia się na działalniu, nie na gadaniu",FALSE,,
+,sprawnie przełącza się między zadaniami,TRUE,,Po komentarzach z naszej strony dopasowywał się i zmieniał kontekst
+,kieruje się potrzebami klienta i produktu,FALSE,,
+,na swoją pracę patrzy w kategoriach dostarczanej wartości,FALSE,,
+,aktywnie poznaje potrzeby klienta,FALSE,,
+TECHNICAL EXPERTISE,używa różnych narzędzi i języków aby osiągnąć cel biznesowy,TRUE,,Używał Cursora do pracy nad zadaniem ale jak ten nie pomagał mu to szukał dalej w dokumentacji
+,wychodzi poza swoją specjalizację i szuka najlepszego rozwiązania dla produktu,FALSE,,
+,korzysta z BDD i TDD podczas implementacji funkcjonalności,FALSE,,
+,weryfikuje wymagania niefunkcjonalne,FALSE,,
+,bezpieczeństwo,TRUE,,"W trakcie zdania z kodem, poruszył temat trzymania tokena w HttpOnly cookies"
+,wspólnie z klientem uczestniczy w procesie podejmowania decyzji nt. produktu,TRUE,,Troche było widać tutaj mało inicjatywy
+,aktywnie poszukuje częstych i krótkich pętli zwrotnych na temat pracy swojej i zespołu,FALSE,,
+,podczas review aktywnie dopytuje o feedback interesariuszy,FALSE,,
+,analiza ryzyka,FALSE,,
+,architektura,TRUE,,Powiedział że na codzień rzadko zajmuje się tematami architektonicznymi
+COMMUNICATION,udziela informacji zwrotnej,TRUE,Ri,"Powiedział nam o tym że to pierwsze zadanie było dla niego wyzwaniem, nie miał wystarczającej wi"
+,przyjmuje informację zwrotną,TRUE,Ha,przyjął nasz feedback na temat zauważalnego braku inicjatywy i czekania na kolejne kroki i pytania z naszej strony
+,słucha,TRUE,,
+,"otwarcie mówi, gdy się z czymś nie zgadza",FALSE,,
+,"dyskutuje pomysły, proponuje rozwiązania i argumentuje je w rozmowie",TRUE,,
+,zadaje pytania by zrozumieć,TRUE,,
+,płynnie rozmawia po angielsku,TRUE,Ha,Angielski Pawła był na komunikatywnym poziomie
+,wizualizuje pomysły trudne do przekazania słownie,TRUE,,
+,klarownie opisuje co i w jakim kierunku robi,FALSE,,
+,"otwarcie komunikuje, że czegoś nie potrafi",TRUE,,"""graphQL dawno nie używałem"""

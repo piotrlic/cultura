@@ -1,0 +1,7 @@
+GET http://localhost:4321/api/cards
+
+###
+POST http://localhost:4321/api/cards
+Content-Type: application/json
+
+{ "card_data": { "movies": "The Matrix", "series": "Breaking Bad", "music": "The Beatles", "books": "1984" } }
