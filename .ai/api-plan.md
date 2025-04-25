@@ -3,10 +3,12 @@
 ## 1. Resources
 
 - **Users** (Managed by Supabase Auth):
+
   - Fields: `id`, `email`, `username`, `encrypted_password`, `created_at`, `status`
   - Note: User management (registration/login) is handled by Supabase Auth.
 
 - **Cards**:
+
   - Fields: `id`, `user_id`, `card_data` (includes movies, series, music, books), `sharing_token`, `created_at`, `modified_at`
   - Represents a cultural profile card for each user.
 
@@ -23,6 +25,7 @@
 ### Cards
 
 1. **Create Card**
+
    - **Method:** POST
    - **URL:** `/api/cards`
    - **Description:** Creates a new cultural profile card using a default template.
@@ -52,6 +55,7 @@
    - **Errors:** 400 Bad Request, 401 Unauthorized, 500 Internal Server Error
 
 2. **Retrieve Card (Authenticated)**
+
    - **Method:** GET
    - **URL:** `/api/cards/{id}`
    - **Description:** Retrieves a specific card by its ID. Only the owner can access this endpoint.
@@ -60,6 +64,7 @@
    - **Errors:** 401 Unauthorized, 404 Not Found
 
 3. **Retrieve Shared Card (Public)**
+
    - **Method:** GET
    - **URL:** `/api/cards/shared/{sharing_token}`
    - **Description:** Retrieves a card using its unique sharing token without requiring authentication.
@@ -68,6 +73,7 @@
    - **Errors:** 404 Not Found
 
 4. **Update Card (Authenticated)**
+
    - **Method:** PUT or PATCH
    - **URL:** `/api/cards/{id}`
    - **Description:** Updates the content of an existing card. Only the card owner can update it.
@@ -87,6 +93,7 @@
    - **Errors:** 400 Bad Request, 401 Unauthorized, 404 Not Found, 500 Internal Server Error
 
 5. **Delete Card (Authenticated)**
+
    - **Method:** DELETE
    - **URL:** `/api/cards/{id}`
    - **Description:** Deletes a card. Only accessible by the owner.
@@ -97,10 +104,39 @@
    - **Success:** 200 OK or 204 No Content
    - **Errors:** 401 Unauthorized, 404 Not Found
 
+6. **Generate Card data(Authenticated)**
+   - **Method:** POST
+   - **URL:** `/api/cards/generate`
+   - **Description:** Generate card details by AU.
+     - **Request Payload:**
+     ```json
+     {
+       "card_data": {
+         "movies": "string",
+         "series": "string",
+         "music": "string",
+         "books": "string"
+       }
+     }
+     ```
+   - **Response Payload:**
+     ```json
+     {
+       "card_data": {
+         "movies": "string",
+         "series": "string",
+         "music": "string",
+         "books": "string"
+       }
+     }
+     ```
+   - **Success:** 200 OK
+   - **Errors:** 400 Bad Request, 401 Unauthorized, 500 Internal Server Error
 
 ### Additional Endpoints and Features
 
 - **Rate Limiting:**
+
   - Apply middleware to sensitive endpoints (e.g., login and card update) to prevent abuse.
 
 - **Error Handling:**
@@ -109,6 +145,7 @@
 ## 3. Authentication and Authorization
 
 - **Authentication:**
+
   - JWT tokens issued by Supabase Auth are required for accessing protected endpoints.
   - Clients must include the header: `Authorization: Bearer <token>`.
 
@@ -120,6 +157,7 @@
 ## 4. Validation and Business Logic
 
 - **Validations:**
+
   - Ensure required fields (e.g., for `card_data`: movies, series, music, books) are present and correctly formatted in create and update operations.
   - Enforce uniqueness and integrity of `sharing_token` values.
   - Validate data types and required constraints per the database schema.
@@ -129,4 +167,4 @@
   - Record each card update as a new entry in the Card Edits resource.
   - The public endpoint for shared cards omits sensitive user details.
   - Support pagination, filtering, and sorting on list endpoints.
-  - Implement global error handling and logging for audit trails. 
+  - Implement global error handling and logging for audit trails.
