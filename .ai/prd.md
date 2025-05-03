@@ -88,6 +88,14 @@ Kryteria akceptacji:
 - Dane użytkownika są przechowywane w sposób bezpieczny.
 - System autoryzacji skutecznie chroni dostęp do konta.
 
+US-006
+Tytuł: Widok wizytówki Cultura
+Opis: Jako użytkownik chcę móc obejrzeć już utworzoną wizytówkę oraz przejść do edycji, aby na bieżąco aktualizować informacje o moich zainteresowaniach.
+Kryteria akceptacji:
+
+- Użytkownik ma dostęp widoku wygenerowanej wizytówki
+- Użytkownik może przejść do ekranów edycji albo usunąć wizytówkę by utworzyć nową
+
 ## 6. Metryki sukcesu
 
 Osiągnięcie sukcesu produktu będzie mierzone poprzez następujące wskaźniki:

@@ -22,12 +22,12 @@ Interfejs użytkownika został zaprojektowany z wykorzystaniem podejścia Mobile
   - Kluczowe komponenty widoku: Formularz, przyciski, powiadomienia o nieprawidłowych danych.
   - UX, dostępność i względy bezpieczeństwa: Zabezpieczenie komunikacji, mechanizm JWT dla sesji, responsywny design, wsparcie dla ARIA.
 
-- **Dashboard**
+- **Widok wizytówki**
 
-  - Ścieżka widoku: `/dashboard`
+  - Ścieżka widoku: `/card`
   - Główny cel: Interfejs startowy po zalogowaniu, umożliwiający podgląd oraz edycje i usuwanie wizytówki.
-  - Kluczowe informacje do wyświetlenia: Podsumowanie wizytówki (jeśli już istnieje), przyciski do utworzenia lub edycji wizytówki, lista historii edycji.
-  - Kluczowe komponenty widoku: Karta wizytówki, lista edycji, przyciski akcji, nagłówek, pasek nawigacji.
+  - Kluczowe informacje do wyświetlenia: Podsumowanie wizytówki (jeśli już istnieje), przyciski do utworzenia lub edycji wizytówki
+  - Kluczowe komponenty widoku: Karta wizytówki, przyciski akcji, nagłówek, pasek nawigacji.
   - UX, dostępność i względy bezpieczeństwa: Jasna informacja o stanie wizytówki, intuicyjne przyciski, zabezpieczenia JWT, dostępność poprzez odpowiednie atrybuty ARIA.
 
 - **Tworzenie wizytówki**

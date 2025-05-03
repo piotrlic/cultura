@@ -1,7 +1,7 @@
-import { nanoid } from 'nanoid';
-import type { SupabaseClient } from '../../db/supabase.client';
-import type { CardDTO, CreateCardCommand } from '../../types';
-import { CardCreationError, DatabaseError, CardError } from '../errors/card.errors';
+import { nanoid } from "nanoid";
+import type { SupabaseClient } from "../../db/supabase.client";
+import type { CardDTO, CreateCardCommand } from "../../types";
+import { CardCreationError, DatabaseError, CardError } from "../errors/card.errors";
 
 export class CardService {
   constructor(private readonly supabase: SupabaseClient) {}
@@ -12,7 +12,7 @@ export class CardService {
       const sharingToken = nanoid(12); // Generate a 12-character unique token
 
       const { data, error } = await this.supabase
-        .from('cards')
+        .from("cards")
         .insert({
           user_id: userId,
           card_data: command.card_data,
@@ -24,11 +24,11 @@ export class CardService {
         .single();
 
       if (error) {
-        throw new DatabaseError('Failed to create card in database', error);
+        throw new DatabaseError("Failed to create card in database", error);
       }
 
       if (!data) {
-        throw new CardCreationError('Card was created but no data was returned');
+        throw new CardCreationError("Card was created but no data was returned");
       }
 
       return data as CardDTO;
@@ -36,7 +36,15 @@ export class CardService {
       if (error instanceof CardError) {
         throw error;
       }
-      throw new CardCreationError('Failed to create card', error);
+      throw new CardCreationError("Failed to create card", error);
     }
   }
-} 
+
+  async getCardByUserId(userId: string): Promise<CardDTO | null> {
+    const { data, error } = await this.supabase.from("cards").select("*").eq("user_id", userId).single();
+    if (error) {
+      throw new DatabaseError("Failed to get card from database", error);
+    }
+    return data;
+  }
+}

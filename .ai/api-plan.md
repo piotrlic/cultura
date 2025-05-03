@@ -57,8 +57,8 @@
 2. **Retrieve Card (Authenticated)**
 
    - **Method:** GET
-   - **URL:** `/api/cards/{id}`
-   - **Description:** Retrieves a specific card by its ID. Only the owner can access this endpoint.
+   - **URL:** `/api/cards`
+   - **Description:** Retrieves unique card. Only the owner can access this endpoint.
    - **Response Payload:** Same as the card response above.
    - **Success:** 200 OK
    - **Errors:** 401 Unauthorized, 404 Not Found
