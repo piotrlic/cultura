@@ -123,7 +123,7 @@ const CardEditor = ({ isNewCard }: CardEditorProps) => {
       }
 
       // Redirect to card view on success
-      // window.location.href = "/card";
+      window.location.href = "/card";
     } catch (err) {
       console.error("Error saving card:", err);
       setSaveError("Failed to save card. Please try again.");

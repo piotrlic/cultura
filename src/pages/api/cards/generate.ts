@@ -12,7 +12,6 @@ const generateCardService = new GenerateCardService();
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
     // Check authentication
-    // Check authentication
     const mockUser = {
       id: "4bb0b624-3295-4a1b-8255-1d76855004e8",
       email: "mock@example.com",
@@ -58,12 +57,20 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     if (error instanceof GenerateCardError) {
       logger.error("Card generation error", { code: error.code, message: error.message });
+
+      const errorMessages = {
+        API_KEY_MISSING: "OpenRouter API key not configured",
+        API_REQUEST_FAILED: "Failed to connect to AI service",
+        GENERATION_FAILED: "Failed to generate card data",
+      };
+
+      const statusCode = error.code === "API_KEY_MISSING" ? 503 : 500;
       return new Response(
         JSON.stringify({
-          error: "Failed to generate card data",
+          error: errorMessages[error.code as keyof typeof errorMessages] || "Failed to generate card data",
           code: error.code,
         }),
-        { status: 500, headers: { "Content-Type": "application/json" } }
+        { status: statusCode, headers: { "Content-Type": "application/json" } }
       );
     }
 
