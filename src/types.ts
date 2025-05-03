@@ -22,8 +22,9 @@ export interface CardDTO {
   id: string;
   user_id: string;
   card_data: CardData;
+  generated_card_data: CardData;
   sharing_token: string;
-  created_at: string;  // ISO8601 timestamp
+  created_at: string; // ISO8601 timestamp
   modified_at: string; // ISO8601 timestamp
 }
 
@@ -31,7 +32,7 @@ export interface CardDTO {
  * DTO for a card when accessed via a public shared link.
  * Sensitive data (e.g., user_id) is omitted.
  */
-export type SharedCardDTO = Omit<CardDTO, 'user_id'>;
+export type SharedCardDTO = Omit<CardDTO, "user_id">;
 
 /**
  * Command model for creating a new card.
@@ -58,5 +59,5 @@ export interface CardEditDTO {
   id: string;
   card_id: string;
   editor_id: string;
-  created_at: string;  // ISO8601 timestamp
-} 
+  created_at: string; // ISO8601 timestamp
+}

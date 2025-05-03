@@ -65,7 +65,7 @@ const CardEditor = ({ isNewCard }: CardEditorProps) => {
           card_data: formData,
         };
 
-        const response = await fetch(`/api/cards/${card.id}`, {
+        const response = await fetch(`/api/cards`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",

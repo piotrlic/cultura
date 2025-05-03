@@ -3,22 +3,26 @@
 ## 1. Tables and Columns
 
 ### users (This table is managed by Supabase Auth)
+
 - **id**: UUID, PRIMARY KEY
 - **email**: VARCHAR(255), UNIQUE, NOT NULL
 - **username**: VARCHAR(50), NOT NULL
 - **encrypted_password**: VARCHAR(255), NOT NULL
 - **created_at**: TIMESTAMPTZ, DEFAULT NOW(), NOT NULL
-- **status**: VARCHAR(20) NOT NULL  -- opcjonalny status konta
+- **status**: VARCHAR(20) NOT NULL -- opcjonalny status konta
 
 ### cards
+
 - **id**: UUID, PRIMARY KEY
 - **user_id**: UUID, UNIQUE, NOT NULL, REFERENCES auth.users(id) ON DELETE CASCADE
-- **card_data**: JSONB, NOT NULL  -- JSON obejmujący pola: Movies, Series, Music, Books
+- **card_data**: JSONB, NOT NULL -- JSON obejmujący pola: Movies, Series, Music, Books
+- **generated_card_data**: JSONB, NULLABLE - JSON wygenerowany na podstawie card_data zawierający rozszerzone informacje
 - **sharing_token**: VARCHAR(255), UNIQUE, NOT NULL
 - **created_at**: TIMESTAMPTZ, DEFAULT NOW(), NOT NULL
 - **modified_at**: TIMESTAMPTZ, DEFAULT NOW(), NOT NULL
 
 ### card_edits
+
 - **id**: UUID, PRIMARY KEY
 - **card_id**: UUID, NOT NULL, REFERENCES cards(id) ON DELETE CASCADE
 - **created_at**: TIMESTAMPTZ, DEFAULT NOW(), NOT NULL
@@ -47,4 +51,4 @@
 
 - Schemat jest zaprojektowany zgodnie z zasadami normalizacji (3NF), przy czym `card_data` jako JSONB umożliwia elastyczność w przyszłych modyfikacjach schematu danych.
 - Integralność danych jest zapewniona przez klucze główne, unikalne ograniczenia oraz powiązania za pomocą kluczy obcych z akcjami ON DELETE CASCADE.
-- Indeksy zostały dodane, aby zoptymalizować wydajność zapytań, szczególnie przy wyszukiwaniu po unikalnych polach i relacjach między tabelami. 
+- Indeksy zostały dodane, aby zoptymalizować wydajność zapytań, szczególnie przy wyszukiwaniu po unikalnych polach i relacjach między tabelami.

@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import type { SupabaseClient } from "../../db/supabase.client";
-import type { CardDTO, CreateCardCommand } from "../../types";
+import type { CardDTO, CreateCardCommand, UpdateCardCommand } from "../../types";
 import { CardCreationError, DatabaseError, CardError } from "../errors/card.errors";
 
 export class CardService {
@@ -46,5 +46,43 @@ export class CardService {
       throw new DatabaseError("Failed to get card from database", error);
     }
     return data;
+  }
+
+  async updateCard(userId: string, command: UpdateCardCommand): Promise<CardDTO> {
+    try {
+      const now = new Date().toISOString();
+
+      // First verify that the card exists for this user
+      const existingCard = await this.getCardByUserId(userId);
+      if (!existingCard) {
+        throw new CardError("Card not found for this user");
+      }
+
+      // Update the card
+      const { data, error } = await this.supabase
+        .from("cards")
+        .update({
+          card_data: command.card_data,
+          modified_at: now,
+        })
+        .eq("user_id", userId)
+        .select()
+        .single();
+
+      if (error) {
+        throw new DatabaseError("Failed to update card in database", error);
+      }
+
+      if (!data) {
+        throw new CardError("Card was updated but no data was returned");
+      }
+
+      return data as CardDTO;
+    } catch (error) {
+      if (error instanceof CardError) {
+        throw error;
+      }
+      throw new CardError("Failed to update card");
+    }
   }
 }

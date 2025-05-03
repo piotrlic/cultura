@@ -15,7 +15,7 @@ const CardPreview = ({ card }: CardPreviewProps) => {
     }).format(date);
   };
 
-  const { movies, series, music, books } = card.card_data;
+  const { movies, series, music, books } = card.generated_card_data;
 
   return (
     <Card className="w-full">
