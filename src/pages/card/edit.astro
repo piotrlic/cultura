@@ -3,9 +3,9 @@ import Layout from "../../layouts/MainLayout.astro";
 import CardEditor from "../../components/CardEditor";
 ---
 
-<Layout title="Utwórz wizytówkę - Cultura">
+<Layout title="Edytuj wizytówkę - Cultura">
   <div class="container mx-auto py-8">
-    <h1 class="text-2xl font-bold mb-6">Utwórz wizytówkę</h1>
-    <CardEditor isNewCard={true} client:load />
+    <h1 class="text-2xl font-bold mb-6">Edytuj wizytówkę</h1>
+    <CardEditor isNewCard={false} client:load />
   </div>
 </Layout>
