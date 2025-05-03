@@ -118,6 +118,7 @@ export const PUT: APIRoute = async ({ request, locals }) => {
 
     // Parse and validate request body
     const body = await request.json();
+    console.log(body);
     const result = updateCardCommandSchema.safeParse(body);
 
     if (!result.success) {

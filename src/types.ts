@@ -14,6 +14,10 @@ export interface CardData {
   books: string;
 }
 
+export interface GeneratedCardData {
+  card_data: CardData;
+}
+
 /**
  * DTO representing a complete card entity from the database.
  * Maps to the 'cards' table in the database.
@@ -40,6 +44,7 @@ export type SharedCardDTO = Omit<CardDTO, "user_id">;
  */
 export interface CreateCardCommand {
   card_data: CardData;
+  generated_card_data?: CardData;
 }
 
 /**
@@ -49,6 +54,7 @@ export interface CreateCardCommand {
  */
 export interface UpdateCardCommand {
   card_data: CardData;
+  generated_card_data?: CardData;
 }
 
 /**

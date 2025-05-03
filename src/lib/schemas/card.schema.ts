@@ -11,11 +11,13 @@ export const cardDataSchema = z.object({
 // Schema for create card command
 export const createCardCommandSchema = z.object({
   card_data: cardDataSchema,
+  generated_card_data: cardDataSchema.optional(),
 });
 
 // Schema for update card command
 export const updateCardCommandSchema = z.object({
   card_data: cardDataSchema,
+  generated_card_data: cardDataSchema.optional(),
 });
 
 // Type inference helpers

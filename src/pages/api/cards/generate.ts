@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { cardDataSchema } from "../../../lib/schemas/cardDataSchema";
 import { ZodError } from "zod";
-import { GenerateCardService, GenerateCardError } from "../../../lib/services/generateCardService";
+import { GenerateCardService, GenerateCardError } from "../../../lib/services/generate-card.service";
 import { createLogger } from "../../../lib/utils/logger";
 
 export const prerender = false;

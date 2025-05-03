@@ -10,12 +10,12 @@ export class CardService {
     try {
       const now = new Date().toISOString();
       const sharingToken = nanoid(12); // Generate a 12-character unique token
-
       const { data, error } = await this.supabase
         .from("cards")
         .insert({
           user_id: userId,
           card_data: command.card_data,
+          ...(command.generated_card_data ? { generated_card_data: command.generated_card_data } : {}),
           sharing_token: sharingToken,
           created_at: now,
           modified_at: now,
@@ -57,12 +57,14 @@ export class CardService {
       if (!existingCard) {
         throw new CardError("Card not found for this user");
       }
-
+      console.log("Update Card");
+      console.log(command);
       // Update the card
       const { data, error } = await this.supabase
         .from("cards")
         .update({
           card_data: command.card_data,
+          ...(command.generated_card_data ? { generated_card_data: command.generated_card_data } : {}),
           modified_at: now,
         })
         .eq("user_id", userId)
