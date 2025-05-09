@@ -3,11 +3,32 @@ export const prerender = false;
 
 import Layout from "../layouts/MainLayout.astro";
 import { LoginForm } from "../components/auth/LoginForm";
+import { createServerClient } from "@supabase/ssr";
+import { cookieOptions } from "../middleware";
 
-// Check if user is already logged in
-const token = Astro.cookies.get("session")?.value;
+// Initialize Supabase client with the newer cookie methods
+const supabase = createServerClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
+  cookies: {
+    get(key) {
+      return Astro.cookies.get(key)?.value;
+    },
+    set(key, value, options) {
+      Astro.cookies.set(key, value, { ...cookieOptions, ...options });
+    },
+    remove(key, options) {
+      Astro.cookies.delete(key, { ...cookieOptions, ...options });
+    },
+  },
+});
 
-if (token) {
+// Check if user is already logged in with a valid session
+const {
+  data: { session },
+  error,
+} = await supabase.auth.getSession();
+
+// Only redirect if we have a valid session and no errors
+if (session && !error) {
   return Astro.redirect("/card");
 }
 ---
