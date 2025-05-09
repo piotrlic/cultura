@@ -1,0 +1,10 @@
+---
+import Layout from "../layouts/MainLayout.astro";
+import { RegisterForm } from "../components/auth/RegisterForm";
+---
+
+<Layout title="Rejestracja - Cultura">
+  <div class="container mx-auto py-8">
+    <RegisterForm client:load />
+  </div>
+</Layout>
