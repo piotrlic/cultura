@@ -18,6 +18,7 @@ export function LoginForm() {
     password: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const validateForm = () => {
     try {
@@ -43,8 +44,31 @@ export function LoginForm() {
     if (!validateForm()) return;
 
     setLoading(true);
-    // Form submission will be implemented later
-    setLoading(false);
+    setServerError(null);
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setServerError(data.error || "Wystąpił błąd podczas logowania");
+        return;
+      }
+
+      toast.success("Zalogowano pomyślnie");
+      window.location.href = "/card";
+    } catch (error) {
+      setServerError("Wystąpił błąd podczas logowania");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -55,6 +79,10 @@ export function LoginForm() {
           <CardDescription>Zaloguj się do swojego konta aby zarządzać swoją wizytówką kulturalną.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {serverError && (
+            <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">{serverError}</div>
+          )}
+
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
