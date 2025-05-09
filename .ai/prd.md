@@ -43,15 +43,6 @@ Projekt Cultura (MVP) nie obejmuje następujących funkcjonalności:
 
 ## 5. Historyjki użytkowników
 
-US-001
-Tytuł: Rejestracja i logowanie użytkownika
-Opis: Jako nowy użytkownik chcę utworzyć konto i zalogować się do systemu, aby mieć możliwość zarządzania moją wizytówką.
-Kryteria akceptacji:
-
-- Użytkownik może utworzyć konto, podając wymagane dane (email, hasło, nazwę użytkownika).
-- Proces logowania weryfikuje poprawność danych.
-- System zapewnia bezpieczny dostęp do konta.
-
 US-002
 Tytuł: Utworzenie wizytówki Cultura
 Opis: Jako zalogowany użytkownik chcę stworzyć wizytówkę prezentującą moje zainteresowania kulturalne, aby przedstawić je innym.
@@ -80,13 +71,21 @@ Kryteria akceptacji:
 - Link umożliwia przeglądanie wizytówki bez konieczności logowania.
 
 US-005
-Tytuł: Bezpieczny dostęp i autoryzacja użytkownika
-Opis: Jako użytkownik chcę mieć pewność, że dostęp do mojego konta jest chroniony i tylko autoryzowane osoby mogą wprowadzać zmiany w wizytówce.
+Tytuł: Bezpieczny dostęp
+Opis: Jako użytkownik chcę mieć możliwość rejestracji i logowania się do systemu w sposób zapewniający bezpieczeństwo moich danych.
 Kryteria akceptacji:
 
-- Dostęp do edycji wizytówki wymaga logowania.
-- Dane użytkownika są przechowywane w sposób bezpieczny.
-- System autoryzacji skutecznie chroni dostęp do konta.
+Kryteria akceptacji:
+
+- Logowanie i rejestracja odbywają się na dedykowanych stronach.
+- Logowanie wymaga podania adresu email i hasła.
+- Rejestracja wymaga podania adresu email, hasła i potwierdzenia hasła.
+- Użytkownik MOŻE podglądać wizytówkę poprzez publiczny link bez logowania się do systemu (US-004).
+- Użytkownik NIE MOŻE tworzyć, edytować i usuwać wizytówki bez logowania się do systemu (US-002, US-003).
+- Użytkownik może logować się do systemu poprzez przycisk w prawym górnym rogu.
+- Użytkownik może się wylogować z systemu poprzez przycisk w prawym górnym rogu w głównym @MainLayout.astro.
+- Nie korzystamy z zewnętrznych serwisów logowania (np. Google, GitHub).
+- Odzyskiwanie hasła powinno być możliwe.
 
 US-006
 Tytuł: Widok wizytówki Cultura
