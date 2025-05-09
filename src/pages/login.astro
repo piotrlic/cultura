@@ -1,6 +1,15 @@
 ---
+export const prerender = false;
+
 import Layout from "../layouts/MainLayout.astro";
 import { LoginForm } from "../components/auth/LoginForm";
+
+// Check if user is already logged in
+const token = Astro.cookies.get("session")?.value;
+
+if (token) {
+  return Astro.redirect("/card");
+}
 ---
 
 <Layout title="Logowanie - Cultura">
