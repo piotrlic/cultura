@@ -10,7 +10,7 @@ import "../styles/global.css";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="bg-secondary">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Cultura - Share Your Cultural Interests" />
@@ -19,7 +19,7 @@ import "../styles/global.css";
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body>
+  <body class="text-text-primary min-h-screen bg-secondary">
     <slot />
     <ToasterProvider client:load />
   </body>
