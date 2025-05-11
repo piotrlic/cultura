@@ -1,35 +1,35 @@
 ---
-export const prerender = false;
+export const prerender = false
 
-import Layout from "../layouts/MainLayout.astro";
-import { LoginForm } from "../components/auth/LoginForm";
-import { createServerClient } from "@supabase/ssr";
-import { cookieOptions } from "../middleware";
+import Layout from "../layouts/MainLayout.astro"
+import { LoginForm } from "../components/auth/LoginForm"
+import { createServerClient } from "@supabase/ssr"
+import { cookieOptions } from "../middleware"
 
 // Initialize Supabase client with the newer cookie methods
 const supabase = createServerClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
   cookies: {
     get(key) {
-      return Astro.cookies.get(key)?.value;
+      return Astro.cookies.get(key)?.value
     },
     set(key, value, options) {
-      Astro.cookies.set(key, value, { ...cookieOptions, ...options });
+      Astro.cookies.set(key, value, { ...cookieOptions, ...options })
     },
     remove(key, options) {
-      Astro.cookies.delete(key, { ...cookieOptions, ...options });
+      Astro.cookies.delete(key, { ...cookieOptions, ...options })
     },
   },
-});
+})
 
 // Check if user is already logged in with a valid session
 const {
   data: { session },
   error,
-} = await supabase.auth.getSession();
+} = await supabase.auth.getSession()
 
 // Only redirect if we have a valid session and no errors
 if (session && !error) {
-  return Astro.redirect("/card");
+  return Astro.redirect("/card")
 }
 ---
 

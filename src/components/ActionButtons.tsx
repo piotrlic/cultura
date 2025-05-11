@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 
 interface ActionButtonsProps {
-  hasCard: boolean;
-  onEdit?: () => void;
-  onDelete?: () => void;
-  onCreate?: () => void;
+  hasCard: boolean
+  onEdit?: () => void
+  onDelete?: () => void
+  onCreate?: () => void
 }
 
 const ActionButtons = ({ hasCard, onEdit, onDelete, onCreate }: ActionButtonsProps) => {
@@ -25,7 +25,7 @@ const ActionButtons = ({ hasCard, onEdit, onDelete, onCreate }: ActionButtonsPro
           Kopiuj link do tej strony
         </Button>
       </div>
-    );
+    )
   }
 
   return (
@@ -34,7 +34,7 @@ const ActionButtons = ({ hasCard, onEdit, onDelete, onCreate }: ActionButtonsPro
         Utwórz wizytówkę
       </Button>
     </div>
-  );
-};
+  )
+}
 
-export default ActionButtons;
+export default ActionButtons

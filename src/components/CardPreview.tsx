@@ -1,21 +1,21 @@
-import type { CardDTO } from "../types";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import type { CardDTO } from "../types"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface CardPreviewProps {
-  card: CardDTO;
+  card: CardDTO
 }
 
 const CardPreview = ({ card }: CardPreviewProps) => {
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    const date = new Date(dateString)
     return new Intl.DateTimeFormat("pl-PL", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
-    }).format(date);
-  };
+    }).format(date)
+  }
 
-  const { movies, series, music, books } = card.generated_card_data;
+  const { movies, series, music, books } = card.generated_card_data
 
   return (
     <Card className="w-full">
@@ -62,8 +62,8 @@ const CardPreview = ({ card }: CardPreviewProps) => {
         <button
           className="text-primary hover:underline text-sm"
           onClick={() => {
-            navigator.clipboard.writeText(`${window.location.origin}/shared/${card.sharing_token}`);
-            alert("Link do udostępnienia skopiowany do schowka!");
+            navigator.clipboard.writeText(`${window.location.origin}/shared/${card.sharing_token}`)
+            alert("Link do udostępnienia skopiowany do schowka!")
           }}
           aria-label="Kopiuj link do udostępnienia"
         >
@@ -71,7 +71,7 @@ const CardPreview = ({ card }: CardPreviewProps) => {
         </button>
       </CardFooter>
     </Card>
-  );
-};
+  )
+}
 
-export default CardPreview;
+export default CardPreview

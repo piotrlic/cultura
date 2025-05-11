@@ -1,11 +1,11 @@
 ---
-import Layout from "../../layouts/MainLayout.astro";
-import { ResetPasswordForm } from "../../components/auth/ResetPasswordForm";
+import Layout from "../../layouts/MainLayout.astro"
+import { ResetPasswordForm } from "../../components/auth/ResetPasswordForm"
 
-const { token } = Astro.params;
+const { token } = Astro.params
 
 if (!token) {
-  return Astro.redirect("/reset-password");
+  return Astro.redirect("/reset-password")
 }
 ---
 
@@ -14,4 +14,3 @@ if (!token) {
     <ResetPasswordForm token={token} client:load />
   </div>
 </Layout>
-

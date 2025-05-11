@@ -1,50 +1,50 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
-import { z } from "zod";
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { toast } from "sonner"
+import { z } from "zod"
 
 const loginSchema = z.object({
   email: z.string().email("Nieprawidłowy format e-mail."),
   password: z.string().min(8, "Hasło musi mieć min. 8 znaków."),
-});
+})
 
 export function LoginForm() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [serverError, setServerError] = useState<string | null>(null);
+  })
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [serverError, setServerError] = useState<string | null>(null)
 
   const validateForm = () => {
     try {
-      loginSchema.parse(formData);
-      setErrors({});
-      return true;
+      loginSchema.parse(formData)
+      setErrors({})
+      return true
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const newErrors: Record<string, string> = {};
+        const newErrors: Record<string, string> = {}
         error.errors.forEach((err) => {
           if (err.path[0]) {
-            newErrors[err.path[0].toString()] = err.message;
+            newErrors[err.path[0].toString()] = err.message
           }
-        });
-        setErrors(newErrors);
+        })
+        setErrors(newErrors)
       }
-      return false;
+      return false
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+    e.preventDefault()
+    if (!validateForm()) return
 
-    setLoading(true);
-    setServerError(null);
+    setLoading(true)
+    setServerError(null)
 
     try {
       const response = await fetch("/api/auth/login", {
@@ -53,23 +53,24 @@ export function LoginForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (!response.ok) {
-        setServerError(data.error || "Wystąpił błąd podczas logowania");
-        return;
+        setServerError(data.error || "Wystąpił błąd podczas logowania")
+        return
       }
 
-      toast.success("Zalogowano pomyślnie");
-      window.location.href = "/card";
-    } catch (error) {
-      setServerError("Wystąpił błąd podczas logowania");
+      toast.success("Zalogowano pomyślnie")
+      window.location.href = "/card"
+    } catch (err) {
+      setServerError("Wystąpił błąd podczas logowania")
+      console.error("Login error:", err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -145,5 +146,5 @@ export function LoginForm() {
         </CardFooter>
       </form>
     </Card>
-  );
+  )
 }

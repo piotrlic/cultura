@@ -1,69 +1,55 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export interface Database {
   public: {
     Tables: {
       cards: {
         Row: {
-          id: string;
-          user_id: string;
+          id: string
+          user_id: string
           card_data: {
-            movies: string;
-            series: string;
-            music: string;
-            books: string;
-          };
-          sharing_token: string;
-          created_at: string;
-          modified_at: string;
-        };
+            movies: string
+            series: string
+            music: string
+            books: string
+          }
+          sharing_token: string
+          created_at: string
+          modified_at: string
+        }
         Insert: {
-          id?: string;
-          user_id: string;
+          id?: string
+          user_id: string
           card_data: {
-            movies: string;
-            series: string;
-            music: string;
-            books: string;
-          };
-          sharing_token: string;
-          created_at: string;
-          modified_at: string;
-        };
+            movies: string
+            series: string
+            music: string
+            books: string
+          }
+          sharing_token: string
+          created_at: string
+          modified_at: string
+        }
         Update: {
-          id?: string;
-          user_id?: string;
+          id?: string
+          user_id?: string
           card_data?: {
-            movies: string;
-            series: string;
-            music: string;
-            books: string;
-          };
-          sharing_token?: string;
-          created_at?: string;
-          modified_at?: string;
-        };
-      };
-    };
-    Views: {
-      [_ in never]: never;
-    };
-    Functions: {
-      [_ in never]: never;
-    };
-    Enums: {
-      [_ in never]: never;
-    };
-    CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
+            movies: string
+            series: string
+            music: string
+            books: string
+          }
+          sharing_token?: string
+          created_at?: string
+          modified_at?: string
+        }
+      }
+    }
+    Views: Record<never, never>
+    Functions: Record<never, never>
+    Enums: Record<never, never>
+    CompositeTypes: Record<never, never>
+  }
 }
 
 type DefaultSchema = Database[Extract<keyof Database, "public">]
@@ -85,10 +71,8 @@ export type Tables<
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] & DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -96,9 +80,7 @@ export type Tables<
     : never
 
 export type TablesInsert<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+  DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"] | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof Database
   }
@@ -119,9 +101,7 @@ export type TablesInsert<
     : never
 
 export type TablesUpdate<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+  DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"] | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof Database
   }
@@ -142,9 +122,7 @@ export type TablesUpdate<
     : never
 
 export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof Database },
+  DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"] | { schema: keyof Database },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof Database
   }
@@ -157,9 +135,7 @@ export type Enums<
     : never
 
 export type CompositeTypes<
-  PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof Database },
+  PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"] | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof Database
   }
@@ -179,4 +155,3 @@ export const Constants = {
     Enums: {},
   },
 } as const
-

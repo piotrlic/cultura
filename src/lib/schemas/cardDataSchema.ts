@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod"
 
 /**
  * Zod schema for validating card data input in the generate endpoint
@@ -10,6 +10,6 @@ export const cardDataSchema = z.object({
     music: z.string().min(1, "Music field is required"),
     books: z.string().min(1, "Books field is required"),
   }),
-});
+})
 
-export type CardDataInput = z.infer<typeof cardDataSchema>;
+export type CardDataInput = z.infer<typeof cardDataSchema>

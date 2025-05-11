@@ -1,10 +1,9 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
-import { z } from "zod";
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { z } from "zod"
 
 const registerSchema = z
   .object({
@@ -19,44 +18,44 @@ const registerSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: "Hasła nie pasują.",
     path: ["confirmPassword"],
-  });
+  })
 
 export function RegisterForm() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     confirmPassword: "",
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  })
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   const validateForm = () => {
     try {
-      registerSchema.parse(formData);
-      setErrors({});
-      return true;
+      registerSchema.parse(formData)
+      setErrors({})
+      return true
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const newErrors: Record<string, string> = {};
+        const newErrors: Record<string, string> = {}
         error.errors.forEach((err) => {
           if (err.path[0]) {
-            newErrors[err.path[0].toString()] = err.message;
+            newErrors[err.path[0].toString()] = err.message
           }
-        });
-        setErrors(newErrors);
+        })
+        setErrors(newErrors)
       }
-      return false;
+      return false
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+    e.preventDefault()
+    if (!validateForm()) return
 
-    setLoading(true);
+    setLoading(true)
     // Form submission will be implemented later
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -140,5 +139,5 @@ export function RegisterForm() {
         </CardFooter>
       </form>
     </Card>
-  );
+  )
 }
