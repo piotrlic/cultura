@@ -1,43 +1,43 @@
-import { useState, useEffect } from "react";
-import type { CardDTO } from "../../types";
+import { useState, useEffect } from "react"
+import type { CardDTO } from "../../types"
 
 interface UseCardReturn {
-  card: CardDTO | null;
-  isLoading: boolean;
-  error: string | null;
-  fetchCard: () => Promise<void>;
+  card: CardDTO | null
+  isLoading: boolean
+  error: string | null
+  fetchCard: () => Promise<void>
 }
 
 export function useCard(): UseCardReturn {
-  const [card, setCard] = useState<CardDTO | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [card, setCard] = useState<CardDTO | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchCard = async (): Promise<void> => {
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(true)
+    setError(null)
 
     try {
-      const response = await fetch("/api/cards");
+      const response = await fetch("/api/cards")
 
       if (response.status === 401) {
-        setError("401");
-        return;
+        setError("401")
+        return
       }
 
       if (response.status === 404) {
         // No card found, but this isn't an error
-        setCard(null);
-        setIsLoading(false);
-        return;
+        setCard(null)
+        setIsLoading(false)
+        return
       }
 
       if (!response.ok) {
-        setError(`${response.status}`);
-        return;
+        setError(`${response.status}`)
+        return
       }
 
-      const data: CardDTO = await response.json();
+      const data: CardDTO = await response.json()
 
       // Validate that all required fields are present
       if (
@@ -48,22 +48,22 @@ export function useCard(): UseCardReturn {
         !data.card_data.music ||
         !data.card_data.books
       ) {
-        setError("Invalid card data received");
-        return;
+        setError("Invalid card data received")
+        return
       }
 
-      setCard(data);
+      setCard(data)
     } catch (err) {
-      setError("Failed to fetch card data");
-      console.error("Error fetching card:", err);
+      setError("Failed to fetch card data")
+      console.error("Error fetching card:", err)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchCard();
-  }, []);
+    fetchCard()
+  }, [])
 
-  return { card, isLoading, error, fetchCard };
+  return { card, isLoading, error, fetchCard }
 }

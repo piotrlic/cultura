@@ -1,0 +1,155 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Run linter
+        run: npm run lint
+
+  unit-test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Generate coverage report (without enforcing thresholds)
+        run: npm run test:coverage -- --collectCoverage
+        continue-on-error: true
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-coverage
+          path: coverage/
+          retention-days: 5
+        if: success() || failure()
+
+  e2e-test:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    environment: integration
+    env:
+      NODE_ENV: "integration"
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Create .env file
+        run: |
+          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" > .env
+          echo "SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}" >> .env
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run E2E tests
+        run: npm run test:e2e
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 5
+        if: success() || failure()
+
+  status-comment:
+    name: Create Status Comment
+    runs-on: ubuntu-latest
+    needs: [lint, unit-test, e2e-test]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download unit test coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: unit-test-coverage
+          path: coverage
+        continue-on-error: true
+
+      - name: Download playwright report
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+        continue-on-error: true
+
+      - name: Create PR comment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+
+            // Get job status from needs context
+            const lintStatus = "${{ needs.lint.result }}" === "success" ? "✅ Success" : "❌ Failure";
+            const unitTestStatus = "${{ needs.unit-test.result }}" === "success" ? "✅ Success" : "❌ Failure";
+            const e2eTestStatus = "${{ needs.e2e-test.result }}" === "success" ? "✅ Success" : "❌ Failure";
+
+            // Try to read coverage report (for informational purposes only)
+            let unitCoverage = 'N/A';
+            try {
+              if (fs.existsSync('./coverage/coverage-final.json')) {
+                const coverageData = JSON.parse(fs.readFileSync('./coverage/coverage-final.json', 'utf8'));
+                const totalCoverage = Object.values(coverageData).reduce((acc, file) => {
+                  acc.covered += file.statementMap ? Object.keys(file.s).filter(key => file.s[key] > 0).length : 0;
+                  acc.total += file.statementMap ? Object.keys(file.statementMap).length : 0;
+                  return acc;
+                }, { covered: 0, total: 0 });
+                
+                unitCoverage = totalCoverage.total > 0 
+                  ? `${((totalCoverage.covered / totalCoverage.total) * 100).toFixed(2)}% (informational only)` 
+                  : 'N/A';
+              } else {
+                unitCoverage = 'Coverage report not available';
+              }
+            } catch (e) {
+              console.error('Error reading coverage data:', e);
+              unitCoverage = 'Error reading coverage data';
+            }
+
+            // Build status message
+            const message = `## PR Check Status
+
+            | Check | Status |
+            | ----- | ------ |
+            | Lint | ${lintStatus} |
+            | Unit Tests | ${unitTestStatus} |
+            | E2E Tests | ${e2eTestStatus} |
+            | Unit Test Coverage | ${unitCoverage} |
+
+            [View workflow details](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });

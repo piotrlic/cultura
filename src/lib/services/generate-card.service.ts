@@ -1,14 +1,14 @@
-import type { CardData } from "../../types";
-import { OpenRouterService } from "./openrouter.service";
-import { createLogger } from "../utils/logger";
+import type { CardData } from "../../types"
+import { OpenRouterService } from "./openrouter.service"
+import { createLogger } from "../utils/logger"
 
 export class GenerateCardError extends Error {
   constructor(
     message: string,
     public readonly code: string
   ) {
-    super(message);
-    this.name = "GenerateCardError";
+    super(message)
+    this.name = "GenerateCardError"
   }
 }
 
@@ -16,8 +16,8 @@ export class GenerateCardError extends Error {
  * Service responsible for generating enhanced card data using AI model via OpenRouter
  */
 export class GenerateCardService {
-  private openRouterService: OpenRouterService;
-  private logger = createLogger("GenerateCardService");
+  private openRouterService: OpenRouterService
+  private logger = createLogger("GenerateCardService")
 
   constructor() {
     // Configure OpenRouter service with appropriate system message and response format
@@ -27,7 +27,7 @@ export class GenerateCardService {
       null,
       "openai/gpt-4o-mini",
       { temperature: 0.7, max_tokens: 1000 }
-    );
+    )
   }
 
   /**
@@ -38,11 +38,11 @@ export class GenerateCardService {
    */
   public async generateCardData(cardData: CardData): Promise<CardData> {
     try {
-      this.logger.debug("Enhancing all card content with a single OpenRouter call");
+      this.logger.debug("Enhancing all card content with a single OpenRouter call")
 
       // Skip processing if all content is empty
       if (this.isAllContentEmpty(cardData)) {
-        return cardData;
+        return cardData
       }
 
       // Create a prompt with all categories
@@ -53,36 +53,36 @@ export class GenerateCardService {
         MUSIC: ${cardData.music}
         BOOKS: ${cardData.books}
         Return your response as a JSON object with the enhanced content for each category.
-      `;
+      `
 
-      console.log("prompt", prompt);
-      const response = await this.openRouterService.sendMessage(prompt);
-      console.log("response", response);
-      this.logger.debug("Received OpenRouter response for all categories");
+      console.log("prompt", prompt)
+      const response = await this.openRouterService.sendMessage(prompt)
+      console.log("response", response)
+      this.logger.debug("Received OpenRouter response for all categories")
 
       // Extract enhanced descriptions from the response
       if (response.choices && response.choices.length > 0) {
-        const responseContent = response.choices[0].message.content;
+        const responseContent = response.choices[0].message.content
 
         if (responseContent) {
           try {
-            console.log("responseContent", responseContent);
-            this.logger.debug("Attempting to parse response content as JSON");
+            console.log("responseContent", responseContent)
+            this.logger.debug("Attempting to parse response content as JSON")
 
             // Try to parse as JSON, handling potential leading/trailing characters
-            let jsonContent = responseContent;
+            let jsonContent = responseContent
 
             // Find the first { and last } to extract the JSON part
-            const firstBrace = jsonContent.indexOf("{");
-            const lastBrace = jsonContent.lastIndexOf("}");
+            const firstBrace = jsonContent.indexOf("{")
+            const lastBrace = jsonContent.lastIndexOf("}")
 
             if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-              jsonContent = jsonContent.substring(firstBrace, lastBrace + 1);
-              this.logger.debug("Extracted JSON content");
+              jsonContent = jsonContent.substring(firstBrace, lastBrace + 1)
+              this.logger.debug("Extracted JSON content")
             }
 
-            const parsedContent = JSON.parse(jsonContent);
-            console.log("parsedContent", parsedContent);
+            const parsedContent = JSON.parse(jsonContent)
+            console.log("parsedContent", parsedContent)
 
             // Verify the returned object has all required fields
             if (
@@ -96,32 +96,32 @@ export class GenerateCardService {
                 series: parsedContent.series || cardData.series,
                 music: parsedContent.music || cardData.music,
                 books: parsedContent.books || cardData.books,
-              };
+              }
             } else {
-              this.logger.error("Parsed content is missing required fields or has wrong types");
+              this.logger.error("Parsed content is missing required fields or has wrong types")
               // Return original data if fields are missing
-              return cardData;
+              return cardData
             }
           } catch (e) {
-            this.logger.error("Failed to parse OpenRouter JSON response", e);
+            this.logger.error("Failed to parse OpenRouter JSON response", e)
             // If parsing fails, return original content
-            return cardData;
+            return cardData
           }
         }
       }
 
       // Fallback if response doesn't have expected format
-      return cardData;
+      return cardData
     } catch (error) {
-      this.logger.error("Failed to generate card data", error);
+      this.logger.error("Failed to generate card data", error)
       if (error instanceof Error) {
         if (error.message.includes("API key is not provided")) {
-          throw new GenerateCardError("OpenRouter API key not configured", "API_KEY_MISSING");
+          throw new GenerateCardError("OpenRouter API key not configured", "API_KEY_MISSING")
         } else if (error.message.includes("API request failed")) {
-          throw new GenerateCardError("OpenRouter API request failed", "API_REQUEST_FAILED");
+          throw new GenerateCardError("OpenRouter API request failed", "API_REQUEST_FAILED")
         }
       }
-      throw new GenerateCardError("Failed to generate card data", "GENERATION_FAILED");
+      throw new GenerateCardError("Failed to generate card data", "GENERATION_FAILED")
     }
   }
 
@@ -129,6 +129,6 @@ export class GenerateCardService {
    * Checks if all content fields in the card data are empty
    */
   private isAllContentEmpty(cardData: CardData): boolean {
-    return !cardData.movies.trim() && !cardData.series.trim() && !cardData.music.trim() && !cardData.books.trim();
+    return !cardData.movies.trim() && !cardData.series.trim() && !cardData.music.trim() && !cardData.books.trim()
   }
 }

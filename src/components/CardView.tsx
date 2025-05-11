@@ -1,11 +1,9 @@
-import { useState, useEffect } from "react";
-import type { CardDTO } from "../types";
-import { useCard } from "./hooks/useCard";
-import CardPreview from "./CardPreview";
-import ActionButtons from "./ActionButtons";
+import { useCard } from "./hooks/useCard"
+import CardPreview from "./CardPreview"
+import ActionButtons from "./ActionButtons"
 
 const CardView = () => {
-  const { card, isLoading, error, fetchCard } = useCard();
+  const { card, isLoading, error, fetchCard } = useCard()
 
   // Handle different states
   if (isLoading) {
@@ -13,10 +11,13 @@ const CardView = () => {
       <div className="container mx-auto py-8">
         <h1 className="text-2xl font-bold mb-6">Moja Wizytówka</h1>
         <div className="flex items-center justify-center p-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <div
+            data-testid="loading-spinner"
+            className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"
+          ></div>
         </div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -38,7 +39,7 @@ const CardView = () => {
           </div>
         )}
       </div>
-    );
+    )
   }
 
   return (
@@ -53,21 +54,22 @@ const CardView = () => {
               hasCard={true}
               onEdit={() => (window.location.href = "/card/edit")}
               onDelete={async () => {
-                const confirmed = window.confirm("Czy na pewno chcesz usunąć swoją wizytówkę?");
+                const confirmed = window.confirm("Czy na pewno chcesz usunąć swoją wizytówkę?")
                 if (confirmed) {
                   try {
                     const response = await fetch(`/api/cards/${card.id}`, {
                       method: "DELETE",
-                    });
+                    })
 
                     if (response.ok) {
                       // Refresh the page or fetch card again
-                      fetchCard();
+                      fetchCard()
                     } else {
-                      alert("Nie udało się usunąć wizytówki. Spróbuj ponownie później.");
+                      alert("Nie udało się usunąć wizytówki. Spróbuj ponownie później.")
                     }
                   } catch (error) {
-                    alert("Wystąpił błąd podczas usuwania wizytówki.");
+                    alert("Wystąpił błąd podczas usuwania wizytówki.")
+                    console.error("Error deleting card:", error)
                   }
                 }
               }}
@@ -83,7 +85,7 @@ const CardView = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default CardView;
+export default CardView

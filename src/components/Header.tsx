@@ -1,4 +1,4 @@
-import { LogoutButton } from "./auth/LogoutButton";
+import { LogoutButton } from "./auth/LogoutButton"
 
 export function Header() {
   return (
@@ -15,5 +15,5 @@ export function Header() {
         </nav>
       </div>
     </header>
-  );
+  )
 }

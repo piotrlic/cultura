@@ -1,51 +1,59 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
-import { z } from "zod";
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { toast } from "sonner"
+import { z } from "zod"
 
 const resetPasswordRequestSchema = z.object({
   email: z.string().email("Nieprawidłowy format e-mail."),
-});
+})
 
 export function ResetPasswordRequestForm() {
-  const [loading, setLoading] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  })
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   const validateForm = () => {
     try {
-      resetPasswordRequestSchema.parse(formData);
-      setErrors({});
-      return true;
+      resetPasswordRequestSchema.parse(formData)
+      setErrors({})
+      return true
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const newErrors: Record<string, string> = {};
+        const newErrors: Record<string, string> = {}
         error.errors.forEach((err) => {
           if (err.path[0]) {
-            newErrors[err.path[0].toString()] = err.message;
+            newErrors[err.path[0].toString()] = err.message
           }
-        });
-        setErrors(newErrors);
+        })
+        setErrors(newErrors)
       }
-      return false;
+      return false
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+    e.preventDefault()
+    if (!validateForm()) return
 
-    setLoading(true);
+    setLoading(true)
     // Form submission will be implemented later
-    setEmailSent(true);
-    setLoading(false);
-  };
+    try {
+      // Implementation will come later
+      toast.success("Instrukcje resetowania hasła zostały wysłane")
+      setEmailSent(true)
+    } catch (error) {
+      toast.error("Wystąpił błąd podczas wysyłania instrukcji")
+      console.error("Password reset request error:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   if (emailSent) {
     return (
@@ -63,7 +71,7 @@ export function ResetPasswordRequestForm() {
           </Button>
         </CardFooter>
       </Card>
-    );
+    )
   }
 
   return (
@@ -111,5 +119,5 @@ export function ResetPasswordRequestForm() {
         </CardFooter>
       </form>
     </Card>
-  );
+  )
 }

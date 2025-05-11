@@ -1,47 +1,47 @@
-import { useState, useEffect } from "react";
-import type { CardData, CardDTO, CreateCardCommand, GeneratedCardData, UpdateCardCommand } from "../types";
-import { useCard } from "./hooks/useCard";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import CardPreview from "./CardPreview";
+import { useState, useEffect } from "react"
+import type { CardData, CardDTO, CreateCardCommand, GeneratedCardData, UpdateCardCommand } from "../types"
+import { useCard } from "./hooks/useCard"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import CardPreview from "./CardPreview"
 
 interface CardEditorProps {
-  isNewCard: boolean;
+  isNewCard: boolean
 }
 
 const CardEditor = ({ isNewCard }: CardEditorProps) => {
-  const { card, isLoading, error, fetchCard } = useCard();
+  const { card, isLoading, error } = useCard()
 
   const [formData, setFormData] = useState<CardData>({
     movies: "",
     series: "",
     music: "",
     books: "",
-  });
+  })
 
-  const [isSaving, setIsSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
-  const [generatedCard, setGeneratedCard] = useState<CardDTO | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generateError, setGenerateError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
+  const [generatedCard, setGeneratedCard] = useState<CardDTO | null>(null)
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [generateError, setGenerateError] = useState<string | null>(null)
   useEffect(() => {
     if (card && !isNewCard) {
-      setFormData(card.card_data);
+      setFormData(card.card_data)
     }
-  }, [card, isNewCard]);
+  }, [card, isNewCard])
 
   const handleInputChange = (field: keyof CardData) => (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [field]: e.target.value,
-    });
-  };
+    })
+  }
 
   const handleGenerate = async () => {
-    setIsGenerating(true);
-    setGenerateError(null);
+    setIsGenerating(true)
+    setGenerateError(null)
 
     try {
       const response = await fetch("/api/cards/generate", {
@@ -50,13 +50,13 @@ const CardEditor = ({ isNewCard }: CardEditorProps) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ card_data: formData }),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        throw new Error(`Error: ${response.status}`)
       }
 
-      const generatedData: GeneratedCardData = await response.json();
+      const generatedData: GeneratedCardData = await response.json()
       // Create a temporary card with the generated data for preview
       const tempCard: CardDTO = {
         id: card?.id || "preview",
@@ -66,21 +66,21 @@ const CardEditor = ({ isNewCard }: CardEditorProps) => {
         sharing_token: card?.sharing_token || "preview",
         created_at: card?.created_at || new Date().toISOString(),
         modified_at: new Date().toISOString(),
-      };
+      }
 
-      setGeneratedCard(tempCard);
+      setGeneratedCard(tempCard)
     } catch (err) {
-      console.error("Error generating card:", err);
-      setGenerateError("Nie udało się wygenerować wizytówki. Spróbuj ponownie później.");
+      setGenerateError("Nie udało się wygenerować wizytówki. Spróbuj ponownie później.")
+      console.error("Error generating card:", err)
     } finally {
-      setIsGenerating(false);
+      setIsGenerating(false)
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSaving(true);
-    setSaveError(null);
+    e.preventDefault()
+    setIsSaving(true)
+    setSaveError(null)
 
     try {
       if (isNewCard) {
@@ -88,7 +88,7 @@ const CardEditor = ({ isNewCard }: CardEditorProps) => {
         const createCommand: CreateCardCommand = {
           card_data: formData,
           generated_card_data: generatedCard?.generated_card_data,
-        };
+        }
 
         const response = await fetch("/api/cards", {
           method: "POST",
@@ -96,41 +96,39 @@ const CardEditor = ({ isNewCard }: CardEditorProps) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(createCommand),
-        });
+        })
 
         if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
+          throw new Error(`Error: ${response.status}`)
         }
       } else if (card) {
-        console.log(generatedCard);
         // Update existing card
         const updateCommand: UpdateCardCommand = {
           card_data: formData,
           generated_card_data: generatedCard ? generatedCard.generated_card_data : undefined,
-        };
-        console.log(updateCommand);
+        }
         const response = await fetch(`/api/cards`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(updateCommand),
-        });
+        })
 
         if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
+          throw new Error(`Error: ${response.status}`)
         }
       }
 
       // Redirect to card view on success
-      window.location.href = "/card";
+      window.location.href = "/card"
     } catch (err) {
-      console.error("Error saving card:", err);
-      setSaveError("Failed to save card. Please try again.");
+      setSaveError("Failed to save card. Please try again.")
+      console.error("Error saving card:", err)
     } finally {
-      setIsSaving(false);
+      setIsSaving(false)
     }
-  };
+  }
 
   // Handle loading state
   if (isLoading && !isNewCard) {
@@ -138,7 +136,7 @@ const CardEditor = ({ isNewCard }: CardEditorProps) => {
       <div className="flex items-center justify-center p-8">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
-    );
+    )
   }
 
   // Handle error state
@@ -158,7 +156,7 @@ const CardEditor = ({ isNewCard }: CardEditorProps) => {
           </div>
         )}
       </div>
-    );
+    )
   }
 
   return (
@@ -321,7 +319,7 @@ const CardEditor = ({ isNewCard }: CardEditorProps) => {
         )}
       </div>
     </form>
-  );
-};
+  )
+}
 
-export default CardEditor;
+export default CardEditor

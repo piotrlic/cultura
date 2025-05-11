@@ -1,4 +1,4 @@
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig, devices } from "@playwright/test"
 
 export default defineConfig({
   testDir: "./e2e",
@@ -22,5 +22,9 @@ export default defineConfig({
     command: "npm run build && npm run preview",
     port: 4321,
     reuseExistingServer: !process.env.CI,
+    env: {
+      SUPABASE_URL: process.env.SUPABASE_URL || "",
+      SUPABASE_KEY: process.env.SUPABASE_KEY || "",
+    },
   },
-});
+})

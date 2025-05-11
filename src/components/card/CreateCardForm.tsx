@@ -1,24 +1,23 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
-import type { CreateCardCommand, CardData } from "@/types";
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { toast } from "sonner"
+import type { CreateCardCommand, CardData } from "@/types"
 
 export function CreateCardForm() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState<CardData>({
     movies: "",
     series: "",
     music: "",
     books: "",
-  });
+  })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault()
+    setLoading(true)
 
     try {
       const response = await fetch("/api/cards", {
@@ -29,24 +28,25 @@ export function CreateCardForm() {
         body: JSON.stringify({
           card_data: formData,
         } as CreateCardCommand),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error("Failed to create card");
+        throw new Error("Failed to create card")
       }
 
-      toast.success("Your cultural card has been created.");
+      toast.success("Your cultural card has been created.")
 
       // TODO: Redirect to the card view page
     } catch (error) {
-      toast.error("Failed to create your card. Please try again.");
+      toast.error("Failed to create your card. Please try again.")
+      console.error("Error creating card:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleGenerate = async () => {
-    setLoading(true);
+    setLoading(true)
 
     try {
       const response = await fetch("/api/cards/generate", {
@@ -57,22 +57,23 @@ export function CreateCardForm() {
         body: JSON.stringify({
           card_data: formData,
         } as CreateCardCommand),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error("Failed to generate card");
+        throw new Error("Failed to generate card")
       }
 
-      const data = await response.json();
-      setFormData(data.card_data);
+      const data = await response.json()
+      setFormData(data.card_data)
 
-      toast.success("Your card has been generated with AI suggestions.");
+      toast.success("Your card has been generated with AI suggestions.")
     } catch (error) {
-      toast.error("Failed to generate suggestions. Please try again.");
+      toast.error("Failed to generate suggestions. Please try again.")
+      console.error("Error generating card:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <Card>
@@ -141,5 +142,5 @@ export function CreateCardForm() {
         </CardFooter>
       </form>
     </Card>
-  );
+  )
 }
