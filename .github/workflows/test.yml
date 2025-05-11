@@ -26,15 +26,6 @@ jobs:
       - name: Run unit tests
         run: npm test
 
-      - name: Generate coverage report
-        run: npm run test:coverage
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage/
-
   e2e-tests:
     name: E2E Tests
     runs-on: ubuntu-latest
