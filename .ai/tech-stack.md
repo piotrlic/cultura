@@ -22,3 +22,11 @@ CI/CD i Hosting
 
 - Github Actions do tworzenia pipeline'ów CI/CD
 - Digital Ocean do hostowania aplikacji za pośrednictwem obrazu docker
+
+Testing - Narzędzia do automatyzacji testów i zapewnienia jakości
+
+- Vitest - framework do testów jednostkowych i integracyjnych JavaScript/TypeScript
+- React Testing Library - biblioteka do testowania komponentów React
+- Playwright - framework do testów end-to-end z możliwością testowania na różnych przeglądarkach
+- GitHub Actions - automatyczne uruchamianie testów w pipeline CI/CD
+- Narzędzia deweloperskie przeglądarek (np. Lighthouse) - do testów wydajności

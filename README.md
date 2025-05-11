@@ -12,6 +12,12 @@ Cultura is a web application that allows users to create, edit, and share profil
 - **Tailwind CSS** 4
 - **Shadcn/ui**
 
+## Testing Technologies
+
+- **Vitest** - Unit and integration testing framework for JavaScript/TypeScript
+- **React Testing Library** - Component testing for React
+- **Playwright** - End-to-end testing framework
+
 ## Getting Started Locally
 
 1. **Clone the repository:**
