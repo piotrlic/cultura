@@ -13,7 +13,10 @@ const CardView = () => {
       <div className="container mx-auto py-8">
         <h1 className="text-2xl font-bold mb-6">Moja Wizytówka</h1>
         <div className="flex items-center justify-center p-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <div
+            data-testid="loading-spinner"
+            className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"
+          ></div>
         </div>
       </div>
     );
