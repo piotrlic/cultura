@@ -42,6 +42,7 @@ jobs:
           name: unit-test-coverage
           path: coverage/
           retention-days: 5
+        if: success() || failure()
 
   e2e-test:
     name: E2E Tests
@@ -75,21 +76,30 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 5
+        if: success() || failure()
 
   status-comment:
     name: Create Status Comment
     runs-on: ubuntu-latest
-    needs: [unit-test, e2e-test]
+    needs: [lint, unit-test, e2e-test]
+    if: always()
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+
+      - name: Download unit test coverage
+        uses: actions/download-artifact@v4
         with:
           name: unit-test-coverage
           path: coverage
-      - uses: actions/download-artifact@v4
+        continue-on-error: true
+
+      - name: Download playwright report
+        uses: actions/download-artifact@v4
         with:
           name: playwright-report
           path: playwright-report
+        continue-on-error: true
+
       - name: Create PR comment
         uses: actions/github-script@v7
         with:
@@ -97,35 +107,44 @@ jobs:
           script: |
             const fs = require('fs');
 
+            // Get job status from needs context
+            const lintStatus = "${{ needs.lint.result }}" === "success" ? "✅ Success" : "❌ Failure";
+            const unitTestStatus = "${{ needs.unit-test.result }}" === "success" ? "✅ Success" : "❌ Failure";
+            const e2eTestStatus = "${{ needs.e2e-test.result }}" === "success" ? "✅ Success" : "❌ Failure";
+
             // Try to read coverage report (for informational purposes only)
             let unitCoverage = 'N/A';
             try {
-              const coverageData = JSON.parse(fs.readFileSync('./coverage/coverage-final.json', 'utf8'));
-              const totalCoverage = Object.values(coverageData).reduce((acc, file) => {
-                acc.covered += file.statementMap ? Object.keys(file.s).filter(key => file.s[key] > 0).length : 0;
-                acc.total += file.statementMap ? Object.keys(file.statementMap).length : 0;
-                return acc;
-              }, { covered: 0, total: 0 });
-              
-              unitCoverage = totalCoverage.total > 0 
-                ? `${((totalCoverage.covered / totalCoverage.total) * 100).toFixed(2)}% (informational only)` 
-                : 'N/A';
+              if (fs.existsSync('./coverage/coverage-final.json')) {
+                const coverageData = JSON.parse(fs.readFileSync('./coverage/coverage-final.json', 'utf8'));
+                const totalCoverage = Object.values(coverageData).reduce((acc, file) => {
+                  acc.covered += file.statementMap ? Object.keys(file.s).filter(key => file.s[key] > 0).length : 0;
+                  acc.total += file.statementMap ? Object.keys(file.statementMap).length : 0;
+                  return acc;
+                }, { covered: 0, total: 0 });
+                
+                unitCoverage = totalCoverage.total > 0 
+                  ? `${((totalCoverage.covered / totalCoverage.total) * 100).toFixed(2)}% (informational only)` 
+                  : 'N/A';
+              } else {
+                unitCoverage = 'Coverage report not available';
+              }
             } catch (e) {
               console.error('Error reading coverage data:', e);
+              unitCoverage = 'Error reading coverage data';
             }
 
             // Build status message
-            const message = `## PR Check Status ✅
+            const message = `## PR Check Status
 
             | Check | Status |
             | ----- | ------ |
-            | Lint | ✅ Success |
-            | Unit Tests | ✅ Success |
-            | E2E Tests | ✅ Success |
+            | Lint | ${lintStatus} |
+            | Unit Tests | ${unitTestStatus} |
+            | E2E Tests | ${e2eTestStatus} |
             | Unit Test Coverage | ${unitCoverage} |
 
-            [View detailed unit test coverage](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})
-            [View Playwright report](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})
+            [View workflow details](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})
             `;
 
             github.rest.issues.createComment({
