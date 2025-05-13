@@ -1,6 +1,4 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 # Check branch naming convention (skip for main branch)
 branch_name=$(git symbolic-ref --short HEAD)
 if [ "$branch_name" != "main" ]; then
