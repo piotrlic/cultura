@@ -9,6 +9,8 @@ const PUBLIC_PATHS = [
   "/api/auth/login",
   "/api/auth/register",
   "/api/auth/reset-password",
+  "/api/auth/session",
+  "/api/auth/logout",
 ]
 
 // Add a function to check if a path is public

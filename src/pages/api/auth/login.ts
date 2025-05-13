@@ -1,7 +1,6 @@
 import type { APIRoute } from "astro"
-import { createServerClient } from "@supabase/ssr"
 import { z } from "zod"
-import { cookieOptions } from "../../../middleware"
+import { createSupabaseServerClient } from "../../../lib/auth"
 
 const loginSchema = z.object({
   email: z.string().email("Nieprawidłowy format e-mail"),
@@ -18,38 +17,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const { email, password } = loginSchema.parse(body)
     console.log("[Login] Form validation passed")
 
-    const supabase = createServerClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
-      auth: {
-        autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: false,
-      },
-      cookies: {
-        get: (key) => {
-          const cookie = cookies.get(key)?.value
-          console.log("[Login] Getting cookie:", key, cookie ? "exists" : "not found")
-          return cookie
-        },
-        set: (key, value, options) => {
-          console.log("[Login] Setting cookie:", key, "with value:", value.substring(0, 10) + "...")
-          cookies.set(key, value, {
-            ...cookieOptions,
-            ...options,
-            path: "/",
-            domain: "",
-          })
-        },
-        remove: (key, options) => {
-          console.log("[Login] Removing cookie:", key)
-          cookies.delete(key, {
-            ...cookieOptions,
-            ...options,
-            path: "/",
-            domain: "",
-          })
-        },
-      },
-    })
+    const supabase = createSupabaseServerClient(cookies)
 
     console.log("[Login] Attempting Supabase authentication")
     const { data, error } = await supabase.auth.signInWithPassword({

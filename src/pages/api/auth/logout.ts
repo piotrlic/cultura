@@ -1,23 +1,10 @@
 import type { APIRoute } from "astro"
-import { createServerClient } from "@supabase/ssr"
-import { cookieOptions } from "../../../middleware"
+import { createSupabaseServerClient } from "../../../lib/auth"
 
 export const prerender = false
 
 export const POST: APIRoute = async ({ cookies, redirect }) => {
-  const supabase = createServerClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY, {
-    cookies: {
-      get(key) {
-        return cookies.get(key)?.value
-      },
-      set(key, value, options) {
-        cookies.set(key, value, { ...cookieOptions, ...options })
-      },
-      remove(key, options) {
-        cookies.delete(key, { ...cookieOptions, ...options })
-      },
-    },
-  })
+  const supabase = createSupabaseServerClient(cookies)
 
   const { error } = await supabase.auth.signOut()
 

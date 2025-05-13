@@ -75,9 +75,13 @@ export function LoginForm() {
   return (
     <Card className="w-full max-w-md mx-auto">
       <form onSubmit={handleSubmit}>
-        <CardHeader>
-          <CardTitle>Zaloguj się</CardTitle>
-          <CardDescription>Zaloguj się do swojego konta aby zarządzać swoją wizytówką kulturalną.</CardDescription>
+        <CardHeader className="text-center">
+          <CardTitle>
+            <a href="/" className="text-6xl font-semibold group">
+              <span className="transition-colors">C</span>
+              <span className="group-hover:text-primary transition-colors">ultura</span>
+            </a>
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {serverError && (
