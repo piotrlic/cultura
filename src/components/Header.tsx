@@ -9,7 +9,6 @@ export function Header() {
     // Check authentication status when component mounts
     isAuthenticated().then((authenticated: boolean) => {
       setIsAuthed(authenticated)
-      console.log("isAuthed", isAuthed)
     })
   }, [])
 

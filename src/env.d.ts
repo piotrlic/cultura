@@ -14,7 +14,8 @@ declare global {
 interface ImportMetaEnv {
   readonly SUPABASE_URL: string
   readonly SUPABASE_KEY: string
-  readonly PUBLIC_APP_URL: string
+  readonly E2E_USERNAME: string
+  readonly E2E_PASSWORD: string
 }
 
 interface ImportMeta {

@@ -57,8 +57,6 @@ export class CardService {
       if (!existingCard) {
         throw new CardError("Card not found for this user")
       }
-      console.log("Update Card")
-      console.log(command)
       // Update the card
       const { data, error } = await this.supabase
         .from("cards")

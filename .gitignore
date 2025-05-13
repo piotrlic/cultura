@@ -30,3 +30,4 @@ playwright-report/
 e2e/screenshots/
 .vitest-ui/
 .env.test
+screenshot/

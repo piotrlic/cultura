@@ -19,11 +19,7 @@ const resetPasswordSchema = z
     path: ["confirmPassword"],
   })
 
-interface ResetPasswordFormProps {
-  token: string
-}
-
-export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
+export function ResetPasswordForm() {
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     newPassword: "",
@@ -57,8 +53,6 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     setLoading(true)
     // Form submission will be implemented later
     try {
-      // Using token here to resolve the unused variable warning
-      console.log(`Using reset token: ${token} to reset password`)
       // Actual implementation will come later
     } catch (error) {
       console.error("Password reset error:", error)

@@ -55,6 +55,8 @@ jobs:
       NODE_ENV: "integration"
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+      E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js
@@ -68,6 +70,8 @@ jobs:
         run: |
           echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" > .env
           echo "SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}" >> .env
+          echo "E2E_USERNAME=${{ secrets.E2E_USERNAME }}" >> .env
+          echo "E2E_PASSWORD=${{ secrets.E2E_PASSWORD }}" >> .env
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
       - name: Run E2E tests
