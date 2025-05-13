@@ -22,7 +22,7 @@ export class GenerateCardService {
   constructor() {
     // Configure OpenRouter service with appropriate system message and response format
     this.openRouterService = new OpenRouterService(
-      'You are a cultural content expert that enhances descriptions of movies, series, music, and books. For each category, provide a brief analysis, relevant context, and links if available. Keep responses concise and informative. ALWAYS respond with valid JSON in the exact format: {"movies": "enhanced movie description", "series": "enhanced series description", "music": "enhanced music description", "books": "enhanced book description"}. Do not include any explanation or formatting outside of the JSON.',
+      "You are a cultural content expert that enhances and structures information about movies, series, music, and books. For each category, extract and enhance information including titles, years, genres and descriptions. ALWAYS respond with valid JSON in the exact format described in the user prompt. Do not include any explanation or formatting outside of the JSON.",
       "",
       null,
       "openai/gpt-4o-mini",
@@ -47,12 +47,74 @@ export class GenerateCardService {
 
       // Create a prompt with all categories
       const prompt = `
-        Enhance the following cultural interests. For each category, provide an enhanced description:
+        You are a "Cultura Card Generator." Your job is to analyze the user's cultural items (movies, TV series, music, books) and return them in a structured JSON format.
+        
+        Parse the user's input for each category and return up to 3 items per category with the following information:
+        1. Title
+        2. Year of release/publication
+        3. One or two genres
+        4. A 1-2 sentence personal note explaining why it's interesting
+        5. Image URL - must be a real, valid URL starting with https:// (use null if not available)
+        6. Info URL - must be a real, valid URL starting with https:// (use null if not available)
+        
+        Here is the user's content:
         MOVIES: ${cardData.movies}
         SERIES: ${cardData.series}
         MUSIC: ${cardData.music}
         BOOKS: ${cardData.books}
-        Return your response as a JSON object with the enhanced content for each category.
+        
+        Return your response as a JSON object with the following EXACT structure:
+        {
+          "movies": [
+            {
+              "title": "Movie Title",
+              "year": 2023,
+              "genres": ["Genre1", "Genre2"],
+              "note": "Personal note about this item",
+              "infoUrl": "https://example.com/info"
+            }
+            // up to 3 items maximum
+          ],
+          "series": [
+            {
+              "title": "Series Title",
+              "year": 2023,
+              "genres": ["Genre1", "Genre2"],
+              "note": "Personal note about this item",
+              "infoUrl": "https://example.com/info"
+            }
+            // up to 3 items maximum
+          ],
+          "music": [
+            {
+              "title": "Music Title",
+              "year": 2023,
+              "genres": ["Genre1", "Genre2"],
+              "note": "Personal note about this item",
+              "infoUrl": "https://example.com/info"
+            }
+            // up to 3 items maximum
+          ],
+          "books": [
+            {
+              "title": "Book Title",
+              "year": 2023,
+              "genres": ["Genre1", "Genre2"],
+              "note": "Personal note about this item",
+              "infoUrl": "https://example.com/info"
+            }
+            // up to 3 items maximum
+          ]
+        }
+
+        IMPORTANT:
+        - For imageUrl and infoUrl, provide ONLY real, valid URLs starting with https:// 
+        - If you cannot provide a real URL, set the value to null (not a string "null", but the JSON null value)
+        - For movies and series, use IMDb URLs when possible (e.g., https://www.imdb.com/...)
+        - For music, use google images 
+        - For books, use google images (e.g., https://www.goodreads.com/book/show/1234567890)
+        - Do not use placeholder text like {url to poster} or template strings
+        - Ensure your response is ONLY valid JSON with no additional text or comments
       `
 
       console.log("prompt", prompt)
@@ -86,16 +148,17 @@ export class GenerateCardService {
 
             // Verify the returned object has all required fields
             if (
-              typeof parsedContent.movies === "string" &&
-              typeof parsedContent.series === "string" &&
-              typeof parsedContent.music === "string" &&
-              typeof parsedContent.books === "string"
+              Array.isArray(parsedContent.movies) &&
+              Array.isArray(parsedContent.series) &&
+              Array.isArray(parsedContent.music) &&
+              Array.isArray(parsedContent.books)
             ) {
+              // Convert the structured data to string format expected by CardData
               return {
-                movies: parsedContent.movies || cardData.movies,
-                series: parsedContent.series || cardData.series,
-                music: parsedContent.music || cardData.music,
-                books: parsedContent.books || cardData.books,
+                movies: JSON.stringify(parsedContent.movies) || cardData.movies,
+                series: JSON.stringify(parsedContent.series) || cardData.series,
+                music: JSON.stringify(parsedContent.music) || cardData.music,
+                books: JSON.stringify(parsedContent.books) || cardData.books,
               }
             } else {
               this.logger.error("Parsed content is missing required fields or has wrong types")

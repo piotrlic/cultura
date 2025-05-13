@@ -42,10 +42,10 @@ export class OpenRouterService {
    * @param endpoint - API endpoint URL
    */
   constructor(
-    systemMessage = "You are a helpful assistant.",
+    systemMessage = "You are a expert about culture and entertainment. Your job is to collect a user’s favorite cultural items (movies, TV series, music tracks/albums, books) and return them in a strict JSON format suitable for rendering on a single-template visual card.  You may ask follow-up questions if the user hasn’t given enough detail.",
     userMessage = "",
     responseFormat: ResponseFormat | null = null,
-    modelName = "gpt-o3-mini",
+    modelName = "",
     modelParams: ModelParams = { temperature: 0.7, max_tokens: 150 },
     apiKey = import.meta.env.OPENROUTER_API_KEY as string,
     endpoint = (import.meta.env.OPENROUTER_ENDPOINT as string) || "https://openrouter.ai/api/v1/chat/completions"
