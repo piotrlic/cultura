@@ -1,12 +1,16 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Check branch naming convention
+# Check branch naming convention (skip for main branch)
 branch_name=$(git symbolic-ref --short HEAD)
-valid_branch_regex="^(feature|bugfix|hotfix|release|chore)\/[a-z0-9-]+$"
-if ! [[ $branch_name =~ $valid_branch_regex ]]; then
-  echo "🚫 Branch name '$branch_name' doesn't follow the convention: $valid_branch_regex"
-  exit 1
+if [ "$branch_name" != "main" ]; then
+  valid_branch_regex="^(feature|bugfix|hotfix|release|chore)\/[a-z0-9-]+$"
+  if ! [[ $branch_name =~ $valid_branch_regex ]]; then
+    echo "🚫 Branch name '$branch_name' doesn't follow the convention: $valid_branch_regex"
+    echo "Branch name must start with feature/, bugfix/, hotfix/, release/, or chore/ followed by a name in kebab-case"
+    echo "Example: feature/add-user-auth"
+    exit 1
+  fi
 fi
 
 # Check for console.log statements (except in test files)
