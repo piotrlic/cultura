@@ -1,1 +1,25 @@
-npx lint-staged
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Check branch naming convention
+branch_name=$(git symbolic-ref --short HEAD)
+valid_branch_regex="^(feature|bugfix|hotfix|release|chore)\/[a-z0-9-]+$"
+if ! [[ $branch_name =~ $valid_branch_regex ]]; then
+  echo "🚫 Branch name '$branch_name' doesn't follow the convention: $valid_branch_regex"
+  exit 1
+fi
+
+# Check for console.log statements (except in test files)
+if git diff --cached --name-only | grep -E '\.(ts|tsx|js|jsx)$' | grep -v '\.test\.' | xargs grep -l 'console\.log'; then
+  echo "🚫 console.log found in non-test files. Please remove them before committing."
+  exit 1
+fi
+
+# Run critical tests
+npm run test || exit 1
+
+# Run lint-staged
+npx lint-staged || exit 1
+
+# Final verification
+echo "✅ Pre-commit checks passed!"
