@@ -1,5 +1,5 @@
 import type { CardDTO } from "../types"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface CardPreviewProps {
   card: CardDTO
@@ -15,15 +15,6 @@ interface MediaItem {
 }
 
 const CardPreview = ({ card }: CardPreviewProps) => {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return new Intl.DateTimeFormat("pl-PL", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    }).format(date)
-  }
-
   // Parse JSON strings into objects
   const parseMediaItems = (jsonString: string): MediaItem[] => {
     try {
@@ -125,54 +116,60 @@ const CardPreview = ({ card }: CardPreviewProps) => {
 
   return (
     <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Moje kulturalne zainteresowania</CardTitle>
-        <CardDescription>Ostatnia aktualizacja: {formatDate(card.modified_at)}</CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-6">
-        <section aria-labelledby="movies-heading">
-          <h3 id="movies-heading" className="font-medium text-lg mb-3">
-            Filmy
-          </h3>
-          {parsedMovies.length > 0 ? (
-            parsedMovies.map((item) => renderMediaItem(item, "movie"))
-          ) : (
-            <p className="text-muted-foreground italic">Brak danych o filmach</p>
-          )}
-        </section>
+      <CardContent>
+        <div className="grid grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Filmy</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {parsedMovies.length > 0 ? (
+                parsedMovies.map((item) => renderMediaItem(item, "movie"))
+              ) : (
+                <p className="text-muted-foreground italic">Brak danych o filmach</p>
+              )}
+            </CardContent>
+          </Card>
 
-        <section aria-labelledby="series-heading">
-          <h3 id="series-heading" className="font-medium text-lg mb-3">
-            Seriale
-          </h3>
-          {parsedSeries.length > 0 ? (
-            parsedSeries.map((item) => renderMediaItem(item, "series"))
-          ) : (
-            <p className="text-muted-foreground italic">Brak danych o serialach</p>
-          )}
-        </section>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Seriale</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {parsedSeries.length > 0 ? (
+                parsedSeries.map((item) => renderMediaItem(item, "series"))
+              ) : (
+                <p className="text-muted-foreground italic">Brak danych o serialach</p>
+              )}
+            </CardContent>
+          </Card>
 
-        <section aria-labelledby="music-heading">
-          <h3 id="music-heading" className="font-medium text-lg mb-3">
-            Muzyka
-          </h3>
-          {parsedMusic.length > 0 ? (
-            parsedMusic.map((item) => renderMediaItem(item, "music"))
-          ) : (
-            <p className="text-muted-foreground italic">Brak danych o muzyce</p>
-          )}
-        </section>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Muzyka</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {parsedMusic.length > 0 ? (
+                parsedMusic.map((item) => renderMediaItem(item, "music"))
+              ) : (
+                <p className="text-muted-foreground italic">Brak danych o muzyce</p>
+              )}
+            </CardContent>
+          </Card>
 
-        <section aria-labelledby="books-heading">
-          <h3 id="books-heading" className="font-medium text-lg mb-3">
-            Książki
-          </h3>
-          {parsedBooks.length > 0 ? (
-            parsedBooks.map((item) => renderMediaItem(item, "book"))
-          ) : (
-            <p className="text-muted-foreground italic">Brak danych o książkach</p>
-          )}
-        </section>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Książki</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {parsedBooks.length > 0 ? (
+                parsedBooks.map((item) => renderMediaItem(item, "book"))
+              ) : (
+                <p className="text-muted-foreground italic">Brak danych o książkach</p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
       </CardContent>
       <CardFooter className="flex justify-between border-t pt-4">
         <div>
